@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="author" content="Hashem A. Shihab">
+        <meta name="description" content="a method for visualizing functional predictions of single nucleotide variants across the human genome.">
+
+        <title>Genome Tolerance Browser</title>
+
+        <link href="./css/bootstrap.min.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header pull-left">
+                    <a class="navbar-brand" href="./index.htm">Genome Tolerance Browser</a>
+                </div>
+                <div class="navbar-header pull-right">
+                    <a class="navbar-brand" href="./faq.htm">Help</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- inform users of browser issues -->
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="startup">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Genome Tolerance Browser</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p style="text-align: justify;">
+                            The Genome Tolerance Browser is a client-side JavaScript application.  This means that all rendering is performed on your 
+                            web browser and not on our server.  As a result, your browser may become slow or unresponsive when viewing large amounts of data.  
+                            <b>We recommend that users remove all genome-wide prediction algorithms before zooming out too far or when seraching for large genes.</b>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        
+        <div class="container">
+            <div class="row">
+                <script language="javascript" src="./js/biodalliance-0.13.js"></script>
+                <script language="javascript">
+                    var trackConf = [{
+                        type: 'default',
+                        style: {
+                            glyph: 'HISTOGRAM',
+                            BGCOLOR: 'rgb(80,110,255)',
+                            HEIGHT: 50,
+                            MIN: 0,
+                            MAX: 1
+                        }
+                    }]
+
+                    new Browser({
+                        chr: '7',
+                        viewStart: 27180538,
+                        viewEnd: 27183448,
+                        rulerLocation: "none",
+                        singleBaseHighlight: true,
+                        disablePoweredBy: true,
+                        noOptions: true,
+                        noPersist: true,
+                        noHelp: true,
+                        noRegistryTabs: true,
+                        fullScreen: true,
+                        disableDefaultFeaturePopup: true,
+                        coordSystem: {
+                            speciesName: 'Human',
+                            taxon: 9606,
+                            auth: 'GRCh',
+                            version: '37',
+                            ucscName: 'hg19',
+                        },
+                        sources: [
+                            {
+                                name: 'Genome',
+                                twoBitURI: 'http://www.biodalliance.org/datasets/hg19.2bit',
+                                tier_type: 'sequence',
+                                pinned: true,
+                                noDefaultLabels: true
+                            },
+                            {
+                                name: 'Genes',
+                                bwgURI: 'http://www.biodalliance.org/datasets/gencode.bb',
+                                stylesheet_uri: 'http://www.biodalliance.org/stylesheets/gencode.xml',
+                                collapseSuperGroups: true,
+                                trixURI: 'http://www.biodalliance.org/datasets/geneIndex.ix',
+                                pinned: true
+                            },
+                            /*
+                                DEFAULT
+                            */
+                            {
+                                name: 'SIFT',
+                                bwgURI: './tracks/SIFT.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'PolyPhen2: HumVar',
+                                bwgURI: './tracks/PPH2_HVAR.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'FATHMM-MKL: Non-Coding',
+                                bwgURI: './tracks/FATHMM_MKLNC.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'CADD',
+                                bwgURI: './tracks/CADD.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                group: "Genome-Wide Methods"
+                            },
+                            /*
+                                OPTIONS
+                            */
+                            {
+                                name: 'PolyPhen2: HumDiv',
+                                bwgURI: './tracks/PPH2_HDIV.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'FATHMM-MKL: Coding',
+                                bwgURI: './tracks/FATHMM_MKLC.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'FATHMM: Unweighted',
+                                bwgURI: './tracks/FATHMM_U.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'FATHMM: Weighted',
+                                bwgURI: './tracks/FATHMM_W.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'Mutation Assessor',
+                                bwgURI: './tracks/MA.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'Mutation Taster',
+                                bwgURI: './tracks/MT.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'VEST',
+                                bwgURI: './tracks/VEST.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'PROVEAN',
+                                bwgURI: './tracks/PROVEAN.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'LRT',
+                                bwgURI: './tracks/LRT.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'MetaLR',
+                                bwgURI: './tracks/MetaLR.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            {
+                                name: 'MetaSVM',
+                                bwgURI: './tracks/MetaSVM.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Nonsynonymous/Coding Methods"
+                            },
+                            /*
+                                GENOME-WIDE
+                            */
+                            {
+                                name: 'DANN',
+                                bwgURI: './tracks/DANN.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'PhyloP (46-Way)',
+                                bwgURI: './tracks/PP46.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'PhyloP (100-Way)',
+                                bwgURI: './tracks/PP100.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'PhastCons (46-Way)',
+                                bwgURI: './tracks/PC46.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'PhastCons (100-Way)',
+                                bwgURI: './tracks/PC100.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'GERP (Rejected Substitutions)',
+                                bwgURI: './tracks/GERP_RS.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            {
+                                name: 'GERP (Constrained Elements)',
+                                bwgURI: './tracks/GERP_CE.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Genome-Wide Methods"
+                            },
+                            /*
+                                DISEASE-SPECIFIC
+                            */
+                            {
+                                name: 'FATHMM: Cancer',
+                                bwgURI: './tracks/FATHMM_C.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Cancer-Specific Methods"
+                            },
+                            {
+                                name: 'TransFIC (SIFT)',
+                                bwgURI: './tracks/TFIC_SIFT.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Cancer-Specific Methods"
+                            },
+                            {
+                                name: 'TransFIC (PolyPhen-2)',
+                                bwgURI: './tracks/TFIC_PPH2.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Cancer-Specific Methods"
+                            },
+                            {
+                                name: 'TransFIC (Mutation Assessor)',
+                                bwgURI: './tracks/TFIC_MA.bw',
+                                style: trackConf,
+                                quantLeapThreshold: 0.5,
+                                disabled: true,
+                                group: "Cancer-Specific Methods"
+                            }
+                            
+
+                        ],      
+                    });
+                </script>
+
+                <div id="svgHolder"></div>
+            </div>
+        </div>
+
+        <script src="./js/jquery.min.js"></script>
+        <script src="./js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $(window).load(function(){
+                $('#startup').modal('show');
+            });
+        </script>
+
+    </body>
+</html>

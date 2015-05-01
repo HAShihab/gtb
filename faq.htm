@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="author" content="Hashem A. Shihab">
+        <meta name="description" content="a method for visualizing functional predictions of single nucleotide variants across the human genome.">
+
+        <title>Genome Tolerance Browser</title>
+
+        <link href="./css/bootstrap.min.css" rel="stylesheet">
+        <link href="./css/font-awesome.min.css" rel="stylesheet">                            
+        
+        <style>
+            // Sidebar adapted from http://www.bootply.com/
+            
+            body {
+                padding-top: 50px;
+            }
+            #masthead {
+                min-height: 250px;
+                text-align: justify;
+            }
+            #masthead h1 {
+                font-size: 30px;
+                line-height: 1;
+                padding-top: 20px;
+            }
+            #masthead .well {
+                margin-top: 8%;
+            }
+            @media screen and (min-width: 768px) {
+                #masthead h1 {
+                    font-size: 50px;
+                }
+            }
+            .navbar-bright {
+                background-color: #111155;
+                color: #fff;
+            }
+            .affix-top,
+            .affix {
+                position: static;
+            }
+            @media (min-width: 979px) {
+                #sidebar.affix-top {
+                    position: static;
+                    margin-top: 30px;
+                    width: 228px;
+                }
+                #sidebar.affix {
+                    position: fixed;
+                    top: 70px;
+                    width: 228px;
+                }
+            }
+            #sidebar li.active {
+                border: 0 #eee solid;
+                border-right-width: 5px;
+            }
+        </style>
+
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header pull-left">
+                    <a class="navbar-brand" href="./index.htm">Genome Tolerance Browser</a>
+                </div>
+                <div class="navbar-header pull-right">
+                    <a class="navbar-brand" href="./faq.htm">Help</a>
+                </div>
+            </div>
+        </nav>
+        
+        <br />
+        <br />
+        <br />
+        <br />
+        
+        <div id="masthead">
+            <div class="container">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-md-3" id="leftCol">
+                        <ul class="nav nav-stacked" id="sidebar">
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#methods">Available Methods</a></li>
+                            <li><a href="#tracks">Adding &amp; Amending Tracks</a></li>
+                            <li><a href="#export">Exporting Images</a></li>
+                            <li><a href="#response">Unresponsive Browser</a></li>
+                            <li><a href="#contact">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="col-md-9">
+                        <h2 id="about">About</h2>
+                        <hr>
+                        <p>
+                            The Genome Tolerance Browser is an online genome browser for visualizing the predicted tolerance of the human genome.
+                            
+                            For each position across the genome, we compiled normalized functional predictions from numerous non-synonymous computational predictions algorithms, such as SIFT and PolyPhen, 
+                            genome-wide computational prediction algortihms, such as FATHMM-MKL and CADD, 
+                            and cancer-specific prediction algorithms, such as FATHMM-Cancer and TransFIC.
+                            
+                            The interactive browser can be used to facilitate the rapid identification of predicted intolerant regions across the genome and can also be used to visualize the concordance &amp; subtle differences 
+                            between multiple prediction algorithms.
+                            
+                                                        
+                            <br />
+                            <br />
+                            <b>If you have found this resource useful, please cite our publication:</b>
+                            <br />
+                            <br />
+                            <ul>
+                                <li>&nbsp;Shihab HA, Rogers MF, Campbell C, Gaunt TR. 2015. GTB – An Online Genome Tolerance Browser. (Submitted)</li>
+                            </ul>
+                        </p>
+                        
+                        
+                        <br />
+                        <h2 id="methods">Available Methods</h2>
+                        <hr>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th width="20%">id</th>
+                                    <th>Method/Description</th>
+                                    <th width="10%">Download</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan=3>
+                                        <h3>Non-Synonymous/Coding Prediction Algorithms</h3>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>SIFT</td>
+                                    <td>SIFT</td>
+                                    <td><a href="./tracks/SIFT.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PPH2_HVAR</td>
+                                    <td>PolyPhen-2 (HumVar)</td>
+                                    <td><a href="./tracks/PPH2_HVAR.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PPH2_HDIV</td>
+                                    <td>PolyPhen-2 (HumDiv)</td>
+                                    <td><a href="./tracks/PPH2_HDIV.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>FATHMM_MKLC</td>
+                                    <td>FATHMM-MKL (Coding)</td>
+                                    <td><a href="./tracks/FATHMM_MKLC.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>FATHMM_U</td>
+                                    <td>FATHMM (Unweighted)</td>
+                                    <td><a href="./tracks/FATHMM_U.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>FATHMM_W</td>
+                                    <td>FATHMM (Weighted)</td>
+                                    <td><a href="./tracks/FATHMM_W.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>MA</td>
+                                    <td>Mutation Assessor</td>
+                                    <td><a href="./tracks/MA.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>MT</td>
+                                    <td>MutationTaster</td>
+                                    <td><a href="./tracks/MT.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>VEST</td>
+                                    <td>VEST</td>
+                                    <td><a href="./tracks/VEST.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PROVEAN</td>
+                                    <td>PROVEAN</td>
+                                    <td><a href="./tracks/PROVEAN.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>LRT</td>
+                                    <td>LRT</td>
+                                    <td><a href="./tracks/LRT.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>MetaLR</td>
+                                    <td>MetaLR</td>
+                                    <td><a href="./tracks/MetaLR.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>MetaSVM</td>
+                                    <td>MetaSVM</td>
+                                    <td><a href="./tracks/MetaSVM.bw">bigWig</a></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan=3>
+                                        <h3>Genome-Wide Prediction Algorithms</h3>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>FATHMM_MKLNC</td>
+                                    <td>FATHMM-MKL (Non-Coding)</td>
+                                    <td><a href="./tracks/FATHMM_MKLNC.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>CADD</td>
+                                    <td>CADD</td>
+                                    <td><a href="./tracks/CADD.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>DANN</td>
+                                    <td>DANN</td>
+                                    <td><a href="./tracks/DANN.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PP46</td>
+                                    <td>PhyloP: based on the MSA of 45 vertebrate genomes to the human genome</td>
+                                    <td><a href="./tracks/PP46.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PP100</td>
+                                    <td>PhyloP: based on the MSA of 99 vertebrate genomes to the human genome</td>
+                                    <td><a href="./tracks/PP100.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PC46</td>
+                                    <td>PhastCons: based on the MSA of 45 vertebrate genomes to the human genome</td>
+                                    <td><a href="./tracks/PC46.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>PC100</td>
+                                    <td>PhastCons: based on the MSA of 99 vertebrate genomes to the human genome</td>
+                                    <td><a href="./tracks/PC100.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>GERP_RS</td>
+                                    <td>GERP++ Rejected Substitutions (RS Scores)</td>
+                                    <td><a href="./tracks/GERP_RS.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>GERP_CE</td>
+                                    <td>GERP++ Constrained Elements</td>
+                                    <td><a href="./tracks/GERP_CE.bw">bigWig</a></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan=3>
+                                        <h3>Cancer-Specific Prediction Algorithms</h3>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>FATHMM_C</td>
+                                    <td>FATHMM-Cancer</td>
+                                    <td><a href="./tracks/FATHMM_C.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>TFIC_SIFT</td>
+                                    <td>TransFIC (SIFT)</td>
+                                    <td><a href="./tracks/TFIC_SIFT.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>TFIC_PPH2</td>
+                                    <td>TransFIC (PolyPhen-2)</td>
+                                    <td><a href="./tracks/TFIC_PPH2.bw">bigWig</a></td>
+                                </tr>
+                                <tr>
+                                    <td>TFIC_MA</td>
+                                    <td>TransFIC (MutationAssessor)</td>
+                                    <td><a href="./tracks/TFIC_MA.bw">bigWig</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        
+                        <h2 id="tracks">Adding &amp; Amending Tracks</h2>
+                        <hr>
+                        <p>
+                            You can add additional tracks representing a range of computational prediction algorithms (please see the above list) using the <i class="fa fa-plus fa-border"></i> icon.  
+                            You can also add custom tracks, representing your own annotation data in bigWig and bigBed format, through the same option. 
+                            Once added to the browser, the appearance of tracks (e.g. color, height etc.) can be amended using the <i class="fa fa-road fa-border"></i> icon.
+                            
+                        </p>
+
+                        <h2 id="export">Exporting Images</h2>
+                        <hr>
+                        <p>
+                           Once you are happy with the tracks displayed in the browser, publication quality images in SVG or PNG format can be generated using the <i class="fa fa-print fa-border"></i> icon.
+                        </p>
+                        
+                        
+                        <h2 id="response">Unresponsive Browser</h2>
+                        <hr>
+                        <p>
+                            The Genome Tolerance Browser is a client-side JavaScript application.  This means that all rendering is performed on your 
+                            web browser and not on our server.  As a result, your browser may become slow or unresponsive when viewing large amounts of data.  
+                            Therefore, <b>we recommend that users remove all genome-wide prediction algorithms before zooming out too far or when seraching for large genes.</b>
+                        </p>
+                        
+                        
+                        <h2 id="contact">Contact Us</h2>
+                        <hr>
+                        <p>
+                           We welcome any comments or suggestions that you may have regarding our browser - please send an email directly to: fathmm@biocompute.org.uk
+                           <br />
+                           <br />
+                           We also encourage developers of functional prediction algorithms wishing to include thier algorithm in our browser to contact us.
+                        </p>
+                        
+                        <!-- add new content when required -->
+                        
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <script src="./js/jquery.min.js"></script>
+        <script src="./js/bootstrap.min.js"></script>
+        <script>
+            $('#sidebar').affix({
+                offset: {
+                    top: 235
+                }
+            });
+            
+            var $body = $(document.body);
+            var navHeight = $('.navbar').outerHeight(true) + 10;
+
+            $body.scrollspy({
+                target: '#leftCol',
+                offset: navHeight
+            });
+
+            $('a[href*=#]:not([href=#])').click(function() {
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                    if (target.length) {
+                        $('html,body').animate({
+                            scrollTop: target.offset().top - 50
+                        }, 1000);
+                        return false;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
